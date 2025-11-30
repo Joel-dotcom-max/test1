@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethical Hacking Fundamentals Quiz</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .quiz-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question:last-child {
+            border-bottom: none;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            background-color: #e9ecef;
+        }
+        
+        .option.selected {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .option.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .option.incorrect {
+            background-color: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .results {
+            text-align: center;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        .score {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .feedback {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .progress {
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ethical Hacking Fundamentals Quiz</h1>
+            <p class="subtitle">Test your knowledge of ethical hacking concepts and lab setup</p>
+        </header>
+        
+        <div class="quiz-container" id="quiz">
+            <!-- Questions will be inserted here by JavaScript -->
+        </div>
+        
+        <div class="controls">
+            <button id="prev-btn" disabled>Previous</button>
+            <button id="next-btn">Next</button>
+            <button id="submit-btn" style="display: none;">Submit Quiz</button>
+        </div>
+        
+        <div class="results" id="results">
+            <!-- Results will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        // Quiz questions based on the PDF content
+        const quizData = [
+            {
+                question: "What is the primary goal of ethical hacking?",
+                options: [
+                    "To exploit systems for personal gain",
+                    "To identify vulnerabilities and improve security",
+                    "To disrupt services for testing purposes",
+                    "To bypass security without authorization"
+                ],
+                correct: 1,
+                explanation: "Ethical hacking is the authorized practice of bypassing system security to identify potential vulnerabilities and threats with the goal of improving security."
+            },
+            {
+                question: "Which type of hacker operates without authorization but without malicious intent?",
+                options: [
+                    "White Hat",
+                    "Black Hat",
+                    "Grey Hat",
+                    "Red Hat"
+                ],
+                correct: 2,
+                explanation: "Grey Hat hackers operate in a middle ground, often without explicit authorization but without malicious intent."
+            },
+            {
+                question: "What is the first phase in the simplified ethical hacking process?",
+                options: [
+                    "Scanning",
+                    "Gaining Access",
+                    "Reconnaissance",
+                    "Reporting"
+                ],
+                correct: 2,
+                explanation: "The first phase is Reconnaissance, which involves passive and active information gathering."
+            },
+            {
+                question: "Why is using a Virtual Machine (VM) recommended for ethical hacking labs?",
+                options: [
+                    "It makes hacking tools run faster",
+                    "It provides isolation and allows snapshots",
+                    "It eliminates the need for antivirus software",
+                    "It automatically installs all necessary tools"
+                ],
+                correct: 1,
+                explanation: "VMs provide isolation (containing your hacking tools), allow snapshots (saving states), and offer portability."
+            },
+            {
+                question: "What is the recommended minimum memory allocation for Kali Linux in VirtualBox?",
+                options: [
+                    "1024 MB (1 GB)",
+                    "2048 MB (2 GB)",
+                    "4096 MB (4 GB)",
+                    "8192 MB (8 GB)"
+                ],
+                correct: 2,
+                explanation: "The PDF recommends allocating at least 4096 MB (4 GB) for smooth performance."
+            },
+            {
+                question: "Which Linux command shows your current location in the filesystem?",
+                options: [
+                    "ls",
+                    "cd",
+                    "pwd",
+                    "mkdir"
+                ],
+                correct: 2,
+                explanation: "The 'pwd' (Print Working Directory) command shows your current location in the filesystem."
+            },
+            {
+                question: "What does the 'sudo' command do?",
+                options: [
+                    "Shows disk usage",
+                    "Executes commands with root privileges",
+                    "Updates system packages",
+                    "Shuts down the system"
+                ],
+                correct: 1,
+                explanation: "The 'sudo' (SuperUser Do) command executes a command with root/administrative privileges."
+            },
+            {
+                question: "Which command would you use to create a new directory in Linux?",
+                options: [
+                    "cd",
+                    "touch",
+                    "mkdir",
+                    "newdir"
+                ],
+                correct: 2,
+                explanation: "The 'mkdir' (Make Directory) command creates a new folder/directory."
+            },
+            {
+                question: "What is Termux?",
+                options: [
+                    "A Linux distribution for ethical hacking",
+                    "A virtual machine software",
+                    "A terminal emulator for Android",
+                    "A password cracking tool"
+                ],
+                correct: 2,
+                explanation: "Termux is a powerful terminal emulator for Android that provides a Linux environment."
+            },
+            {
+                question: "Which command in Termux requests storage access to your phone?",
+                options: [
+                    "pkg update",
+                    "termux-setup-storage",
+                    "sudo apt update",
+                    "ls -la"
+                ],
+                correct: 1,
+                explanation: "The 'termux-setup-storage' command requests storage access and creates a ~/storage directory."
+            }
+        ];
+
+        // DOM Elements
+        const quizContainer = document.getElementById('quiz');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const submitButton = document.getElementById('submit-btn');
+        const resultsContainer = document.getElementById('results');
+
+        // Quiz state
+        let currentQuestion = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let quizCompleted = false;
+
+        // Initialize the quiz
+        function initQuiz() {
+            displayQuestion();
+            updateButtons();
+        }
+
+        // Display the current question
+        function displayQuestion() {
+            const question = quizData[currentQuestion];
+            
+            let optionsHTML = '';
+            question.options.forEach((option, index) => {
+                const isSelected = userAnswers[currentQuestion] === index;
+                const optionClass = isSelected ? 'option selected' : 'option';
+                
+                optionsHTML += `
+                    <div class="${optionClass}" data-index="${index}">
+                        ${option}
+                    </div>
+                `;
+            });
+            
+            quizContainer.innerHTML = `
+                <div class="progress">Question ${currentQuestion + 1} of ${quizData.length}</div>
+                <div class="question">
+                    <div class="question-text">${question.question}</div>
+                    <div class="options">${optionsHTML}</div>
+                </div>
+            `;
+            
+            // Add event listeners to options
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', selectOption);
+            });
+        }
+
+        // Handle option selection
+        function selectOption(e) {
+            if (quizCompleted) return;
+            
+            const selectedIndex = parseInt(e.target.getAttribute('data-index'));
+            userAnswers[currentQuestion] = selectedIndex;
+            
+            // Update UI to show selected option
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            e.target.classList.add('selected');
+            
+            updateButtons();
+        }
+
+        // Update button states
+        function updateButtons() {
+            prevButton.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === quizData.length - 1) {
+                nextButton.style.display = 'none';
+                submitButton.style.display = 'block';
+                submitButton.disabled = userAnswers[currentQuestion] === null;
+            } else {
+                nextButton.style.display = 'block';
+                submitButton.style.display = 'none';
+                nextButton.disabled = userAnswers[currentQuestion] === null;
+            }
+        }
+
+        // Navigate to previous question
+        prevButton.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+                updateButtons();
+            }
+        });
+
+        // Navigate to next question
+        nextButton.addEventListener('click', () => {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+                updateButtons();
+            }
+        });
+
+        // Submit the quiz
+        submitButton.addEventListener('click', showResults);
+
+        // Calculate and display results
+        function showResults() {
+            quizCompleted = true;
+            
+            let score = 0;
+            let resultsHTML = '';
+            
+            quizData.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === question.correct;
+                
+                if (isCorrect) {
+                    score++;
+                }
+                
+                resultsHTML += `
+                    <div class="question">
+                        <div class="question-text">${index + 1}. ${question.question}</div>
+                        <div class="options">
+                            ${question.options.map((option, optIndex) => {
+                                let optionClass = 'option';
+                                if (optIndex === question.correct) {
+                                    optionClass += ' correct';
+                                } else if (optIndex === userAnswer && !isCorrect) {
+                                    optionClass += ' incorrect';
+                                }
+                                
+                                return `<div class="${optionClass}">${option}</div>`;
+                            }).join('')}
+                        </div>
+                        <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+                            ${isCorrect ? '✓ Correct!' : '✗ Incorrect'} - ${question.explanation}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            const percentage = Math.round((score / quizData.length) * 100);
+            
+            resultsContainer.innerHTML = `
+                <h2>Quiz Results</h2>
+                <div class="score">${score}/${quizData.length} (${percentage}%)</div>
+                ${resultsHTML}
+                <button onclick="location.reload()">Take Quiz Again</button>
+            `;
+            
+            resultsContainer.style.display = 'block';
+            quizContainer.style.display = 'none';
+            document.querySelector('.controls').style.display = 'none';
+        }
+
+        // Initialize the quiz when the page loads
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
